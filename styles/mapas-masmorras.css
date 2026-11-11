@@ -1,0 +1,193 @@
+/* Mapas-masmorras — map window, panel and editors. */
+
+.mapas-masmorras {
+  --mm-bg: #121018;
+  --mm-bar: #1d1826;
+  --mm-line: rgba(255, 255, 255, 0.12);
+  --mm-ink: #ece4d4;
+  --mm-soft: #b9ae9a;
+  --mm-accent: #8e5bd0;
+  --mm-good: #3f8f4f;
+  --mm-bad: #b33b33;
+  --mm-war: #8c2a1f;
+  --mm-font: "Signika", "Segoe UI", Arial, sans-serif;
+}
+
+.mapas-masmorras [hidden] { display: none !important; }
+
+.application.mm-map-app .window-content { padding: 0; overflow: hidden; background: var(--mm-bg); }
+
+.mm-map { display: flex; flex-direction: column; height: 100%; font-family: var(--mm-font); color: var(--mm-ink); }
+
+.mm-map .mm-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.6rem;
+  background: var(--mm-bar);
+  border-bottom: 1px solid var(--mm-line);
+}
+.mm-map .mm-toolbar select { width: auto; max-width: 170px; height: 30px; }
+.mm-map .mm-tools { display: inline-flex; gap: 2px; padding: 2px; border-radius: 7px; background: rgba(0, 0, 0, 0.35); }
+.mm-map .mm-title { font-weight: bold; font-size: 1rem; }
+.mm-map .mm-lockstate { font-size: 0.85rem; color: #9fd9a8; }
+.mm-map .mm-lockstate.is-locked { color: #f0b9a6; }
+
+.mapas-masmorras .mm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  width: auto;
+  min-width: 32px;
+  min-height: 30px;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  background: #2a2335;
+  color: var(--mm-ink);
+  font-family: var(--mm-font);
+  font-size: 0.85rem;
+  line-height: 1.1;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.mapas-masmorras .mm-btn:hover { background: #3a3049; }
+.mapas-masmorras .mm-btn:focus-visible { outline: 2px solid var(--mm-accent); outline-offset: 1px; }
+.mapas-masmorras .mm-btn.is-active { background: var(--mm-accent); border-color: #b991ea; color: #fff; }
+.mapas-masmorras .mm-btn.is-locked { background: #5a1f1a; border-color: #b0493f; }
+.mapas-masmorras .mm-btn.is-free { background: #1f4a2a; border-color: #4c9a5d; }
+.mapas-masmorras .mm-btn-primary { background: var(--mm-accent); border-color: #b991ea; color: #fff; }
+.mapas-masmorras .mm-btn-bad { background: #4a1916; border-color: var(--mm-bad); }
+.mapas-masmorras .mm-btn-war { background: var(--mm-war); border-color: #d4553f; color: #fff; }
+.mapas-masmorras .mm-tool { min-width: 34px; padding: 0.2rem 0.45rem; border-color: transparent; background: transparent; }
+.mapas-masmorras .mm-spacer { flex: 1 1 auto; }
+.mapas-masmorras .mm-hint { font-size: 0.78rem; opacity: 0.72; font-weight: normal; }
+.mapas-masmorras .mm-warn { padding: 0.35rem 0.5rem; border-radius: 6px; background: rgba(176, 73, 63, 0.25); font-size: 0.82rem; }
+
+.mm-map .mm-body { flex: 1 1 auto; display: flex; min-height: 0; }
+.mm-map .mm-stage { position: relative; flex: 1 1 auto; min-width: 0; overflow: hidden; background: #0b0a10; }
+.mm-map .mm-canvas { display: block; touch-action: none; cursor: crosshair; }
+.mm-map .mm-badge {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  background: rgba(142, 91, 208, 0.9);
+  color: #fff;
+  font-size: 0.78rem;
+  pointer-events: none;
+}
+.mm-map .mm-tip {
+  position: absolute;
+  z-index: 3;
+  max-width: 250px;
+  padding: 0.4rem 0.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  background: rgba(18, 14, 26, 0.95);
+  color: var(--mm-ink);
+  font-size: 0.8rem;
+  line-height: 1.3;
+  pointer-events: none;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
+}
+.mm-map .mm-tip hr { margin: 0.3rem 0; border: none; border-top: 1px solid var(--mm-line); }
+.mm-map .mm-tip-steps { color: #f2d99a; }
+
+.mm-map .mm-panel {
+  flex: 0 0 330px;
+  overflow-y: auto;
+  padding: 0.6rem 0.7rem 1rem;
+  border-left: 1px solid var(--mm-line);
+  background: #17131f;
+  font-size: 0.85rem;
+}
+.mm-map .mm-panel h2 { margin: 0 0 0.4rem; padding: 0; border: none; font-size: 1.15rem; color: #f3e6c8; }
+.mm-map .mm-panel h2 small { font-size: 0.75rem; color: var(--mm-soft); font-weight: normal; }
+.mm-map .mm-panel details { margin: 0.45rem 0; padding: 0.35rem 0.5rem; border: 1px solid var(--mm-line); border-radius: 6px; background: rgba(255, 255, 255, 0.025); }
+.mm-map .mm-panel summary { cursor: pointer; font-weight: bold; color: #e5d3ab; }
+.mm-map .mm-panel p { margin: 0.35rem 0; line-height: 1.35; }
+.mm-map .mm-row-buttons { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.4rem; }
+.mm-map .mm-encounter { padding: 0.35rem 0.5rem; border-left: 3px solid var(--mm-war); background: rgba(140, 42, 31, 0.15); }
+
+.mm-map .mm-marker-list { list-style: none; margin: 0.4rem 0 0; padding: 0; }
+.mm-map .mm-marker-list li { display: flex; align-items: center; gap: 0.35rem; padding: 0.15rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+.mm-map .mm-marker-list li.is-done { opacity: 0.55; }
+.mapas-masmorras .mm-dot {
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 3px;
+  border: 1.5px solid #f6edd9;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: bold;
+}
+.mapas-masmorras .mm-link {
+  flex: 1 1 auto;
+  width: auto;
+  min-height: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--mm-ink);
+  font-family: var(--mm-font);
+  font-size: 0.82rem;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mapas-masmorras .mm-link:hover { color: #fff; text-decoration: underline; }
+.mapas-masmorras .mm-mini {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 22px;
+  min-height: 0;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--mm-soft);
+  cursor: pointer;
+}
+.mapas-masmorras .mm-mini:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+
+.mapas-masmorras .mm-field { display: flex; flex-direction: column; gap: 0.2rem; margin: 0.3rem 0; font-size: 0.85rem; font-weight: bold; }
+.mapas-masmorras .mm-field input,
+.mapas-masmorras .mm-field select,
+.mapas-masmorras .mm-field textarea { width: 100%; max-width: 100%; box-sizing: border-box; font-weight: normal; }
+.mapas-masmorras .mm-field textarea { resize: vertical; font-family: var(--mm-font); }
+.mapas-masmorras .mm-check { display: flex; align-items: center; gap: 0.4rem; margin: 0.25rem 0; font-size: 0.85rem; }
+.mapas-masmorras .mm-check input { flex: 0 0 auto; margin: 0; }
+.mapas-masmorras .mm-check img { border: none; border-radius: 4px; }
+.mapas-masmorras .mm-check-pad { margin-top: 1.4rem; }
+.mapas-masmorras .mm-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 0.6rem; }
+.mapas-masmorras .mm-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0 0.45rem; }
+.mapas-masmorras fieldset { margin: 0.5rem 0; padding: 0.4rem 0.6rem; border: 1px solid rgba(128, 128, 128, 0.45); border-radius: 6px; }
+.mapas-masmorras legend { padding: 0 0.3rem; font-weight: bold; }
+
+.mm-editor,
+.mm-battle { display: flex; flex-direction: column; height: 100%; font-family: var(--mm-font); }
+.mm-editor .mm-scroll { flex: 1 1 auto; overflow-y: auto; padding-right: 0.3rem; }
+.mapas-masmorras .mm-editor-footer { display: flex; gap: 0.4rem; align-items: center; padding-top: 0.5rem; border-top: 1px solid rgba(128, 128, 128, 0.35); }
+.mm-marker-app.is-dragover .window-content { outline: 3px dashed var(--mm-accent); outline-offset: -6px; }
+.mm-actors ul { list-style: none; margin: 0; padding: 0; }
+.mm-actors li { display: flex; align-items: center; gap: 0.4rem; margin: 0.2rem 0; }
+.mm-actors li img { border: none; border-radius: 4px; }
+.mm-actors li span { flex: 1 1 auto; }
+.mm-actors li input { width: 56px; }
+.mm-battle .mm-enemy { display: flex; align-items: center; gap: 0.4rem; margin: 0.2rem 0; font-size: 0.85rem; }
+.mm-battle .mm-enemy span { flex: 1 1 auto; }
+.mm-battle .mm-enemy input { width: 56px; }
+.mm-battle .mm-enemy img { border: none; border-radius: 4px; }
+
+.mapas-masmorras.mm-chat { padding: 0.35rem 0.5rem; border-left: 4px solid var(--mm-accent); background: rgba(142, 91, 208, 0.08); font-size: 0.85rem; }

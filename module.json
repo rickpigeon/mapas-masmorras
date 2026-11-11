@@ -1,0 +1,12 @@
+{
+  "id": "mapas-masmorras",
+  "title": "Mapas-masmorras",
+  "description": "<p>Os 20 mapas de masmorra de <em>Jornada Heroica: A Libertação de Valkaria</em> (Tormenta20) como grade jogável: névoa de guerra, iluminação simples em volta do grupo, versão dos jogadores sem as marcações do mestre e visão completa para o mestre. O grupo anda pelo mapa como numa viagem (o mestre trava e libera o movimento), o mestre põe armadilhas, encontros, eventos e notas, cada masmorra traz as suas áreas e regras do livro, e um encontro vira uma cena de batalha com paredes, portas e tokens.</p>",
+  "version": "1.0.0",
+  "authors": [{ "name": "rickpigeon" }],
+  "compatibility": { "minimum": "13", "verified": "13" },
+  "esmodules": ["scripts/main.mjs"],
+  "styles": ["styles/mapas-masmorras.css"],
+  "socket": true,
+  "license": "LICENSE"
+}

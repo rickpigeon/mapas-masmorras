@@ -1,0 +1,71 @@
+<div class="mm-editor">
+  <div class="mm-scroll">
+    <div class="mm-grid-2">
+      <label class="mm-field">Tipo
+        <select name="type">{{#each types}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}</select>
+      </label>
+      <label class="mm-field">Rótulo no mapa <span class="mm-hint">(até 3 letras; vazio = símbolo do tipo)</span>
+        <input type="text" name="label" value="{{m.label}}" maxlength="3">
+      </label>
+    </div>
+    <label class="mm-field">Título
+      <input type="text" name="title" value="{{m.title}}" maxlength="120" placeholder="Ex.: Fosso camuflado">
+    </label>
+    <div class="mm-grid-2">
+      <label class="mm-field">Coluna <input type="number" name="c" min="0" max="{{cols}}" value="{{m.c}}"></label>
+      <label class="mm-field">Linha <input type="number" name="r" min="0" max="{{rows}}" value="{{m.r}}"></label>
+    </div>
+    <label class="mm-field">Notas do mestre <span class="mm-hint">(os jogadores nunca veem)</span>
+      <textarea name="gmText" rows="4">{{m.gmText}}</textarea>
+    </label>
+    <label class="mm-field">Texto para os jogadores <span class="mm-hint">(aparece quando o marcador está revelado)</span>
+      <textarea name="playerText" rows="2">{{m.playerText}}</textarea>
+    </label>
+    <label class="mm-check"><input type="checkbox" name="revealed" {{#if m.revealed}}checked{{/if}}> <span>Revelado aos jogadores</span></label>
+
+    <fieldset>
+      <legend>Quando o grupo pisa aqui</legend>
+      <select name="trigger">{{#each triggers}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}</select>
+      <label class="mm-check"><input type="checkbox" name="revealOnTrigger" {{#if m.revealOnTrigger}}checked{{/if}}> <span>Revelar o marcador ao disparar</span></label>
+      <label class="mm-check"><input type="checkbox" name="triggered" {{#if m.triggered}}checked{{/if}}> <span>Já disparou (não para mais o grupo)</span></label>
+      <label class="mm-check"><input type="checkbox" name="done" {{#if m.done}}checked{{/if}}> <span>Resolvido (fica cinza)</span></label>
+    </fieldset>
+
+    <fieldset class="mm-actors">
+      <legend>Quem está aqui <span class="mm-hint">(arraste atores da barra lateral para esta janela)</span></legend>
+      {{#if hasActors}}
+      <ul>
+        {{#each actors}}
+        <li>
+          <img src="{{img}}" alt="" width="28" height="28">
+          <span>{{name}}</span>
+          <input type="number" name="actorCount{{@index}}" min="1" max="20" value="{{count}}" title="Quantidade">
+          <button type="button" class="mm-mini" data-action="removeActor" data-index="{{@index}}" title="Tirar"><i class="fa-solid fa-xmark"></i></button>
+        </li>
+        {{/each}}
+      </ul>
+      {{else}}
+      <p class="mm-hint">Nenhum ator ainda.</p>
+      {{/if}}
+    </fieldset>
+
+    <fieldset>
+      <legend>Área do campo de batalha</legend>
+      <label class="mm-check"><input type="checkbox" name="useBattle" {{#if hasBattle}}checked{{/if}}> <span>Guardar uma área (em casas do mapa)</span></label>
+      <div class="mm-grid-4">
+        <label class="mm-field">Col. inicial <input type="number" name="bc0" min="0" max="{{cols}}" value="{{battle.c0}}"></label>
+        <label class="mm-field">Lin. inicial <input type="number" name="br0" min="0" max="{{rows}}" value="{{battle.r0}}"></label>
+        <label class="mm-field">Col. final <input type="number" name="bc1" min="0" max="{{cols}}" value="{{battle.c1}}"></label>
+        <label class="mm-field">Lin. final <input type="number" name="br1" min="0" max="{{rows}}" value="{{battle.r1}}"></label>
+      </div>
+      <button type="button" class="mm-btn" data-action="areaAround"><i class="fa-solid fa-expand"></i> 13 × 13 em volta</button>
+    </fieldset>
+  </div>
+  <footer class="mm-editor-footer">
+    {{#unless isNew}}<button type="button" class="mm-btn mm-btn-bad" data-action="remove"><i class="fa-solid fa-trash"></i></button>{{/unless}}
+    {{#if scene}}<button type="button" class="mm-btn" data-action="openScene"><i class="fa-solid fa-map"></i> Abrir a cena</button>{{/if}}
+    <span class="mm-spacer"></span>
+    <button type="button" class="mm-btn mm-btn-war" data-action="battle"><i class="fa-solid fa-chess-board"></i> Campo de batalha…</button>
+    <button type="submit" class="mm-btn mm-btn-primary"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+  </footer>
+</div>

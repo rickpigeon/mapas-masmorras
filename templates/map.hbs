@@ -1,0 +1,97 @@
+<section class="mm-map {{#if panel}}has-panel{{/if}}">
+  <header class="mm-toolbar">
+    {{#if gm}}
+    <select name="dungeon" title="Masmorra (só o mestre troca)">
+      {{#each dungeons}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}{{#if current}} ●{{/if}}</option>{{/each}}
+    </select>
+    <div class="mm-tools" role="group" aria-label="Ferramentas">
+      {{#each tools}}
+      <button type="button" class="mm-btn mm-tool {{#if active}}is-active{{/if}}" data-action="tool" data-tool="{{key}}" title="{{label}}"><i class="{{icon}}"></i></button>
+      {{/each}}
+    </div>
+    <button type="button" class="mm-btn {{#if locked}}is-locked{{else}}is-free{{/if}}" data-action="toggleLock" title="{{#if locked}}Movimento dos jogadores travado: clique para liberar{{else}}Jogadores podem mover o grupo: clique para travar{{/if}}">
+      <i class="fa-solid {{#if locked}}fa-lock{{else}}fa-lock-open{{/if}}"></i> {{#if locked}}Travado{{else}}Livre{{/if}}
+    </button>
+    <button type="button" class="mm-btn" data-action="showAll" title="Tornar esta a masmorra atual e abrir o mapa para todos"><i class="fa-solid fa-users"></i> Mostrar a todos</button>
+    <button type="button" class="mm-btn {{#if playerView}}is-active{{/if}}" data-action="playerView" title="Ver como os jogadores veem"><i class="fa-solid fa-eye"></i></button>
+    {{else}}
+    <span class="mm-title"><i class="fa-solid fa-dungeon"></i> Desafio de {{info.god}}</span>
+    <span class="mm-lockstate {{#if locked}}is-locked{{/if}}"><i class="fa-solid {{#if locked}}fa-lock{{else}}fa-person-walking{{/if}}"></i> {{#if locked}}Aguardem o mestre{{else}}Cliquem para mover o grupo{{/if}}</span>
+    {{/if}}
+    <span class="mm-spacer"></span>
+    <button type="button" class="mm-btn" data-action="center" title="Centralizar no grupo"><i class="fa-solid fa-crosshairs"></i></button>
+    <button type="button" class="mm-btn" data-action="fit" title="Ver o mapa inteiro"><i class="fa-solid fa-expand"></i></button>
+    {{#if gm}}<button type="button" class="mm-btn" data-action="togglePanel" title="Painel do mestre"><i class="fa-solid fa-table-columns"></i></button>{{/if}}
+  </header>
+
+  <div class="mm-body">
+    <div class="mm-stage">
+      <canvas class="mm-canvas"></canvas>
+      <div class="mm-tip" hidden></div>
+      {{#if playerView}}<div class="mm-badge">Visão dos jogadores</div>{{/if}}
+    </div>
+
+    {{#if panel}}
+    <aside class="mm-panel">
+      <h2>Desafio de {{info.god}} <small>{{n}}º nível · p. {{info.page}}</small></h2>
+      {{#unless isCurrent}}<p class="mm-warn"><i class="fa-solid fa-circle-info"></i> Os jogadores estão em outra masmorra. Use “Mostrar a todos” para trazê-los para esta.</p>{{/unless}}
+
+      <details open>
+        <summary>Regras da masmorra</summary>
+        <p><strong>Ambiente.</strong> {{info.ambiente}}</p>
+        <p><strong>Agrado aos Deuses.</strong> {{info.agrado}}</p>
+        <p><strong>Encontros.</strong> {{info.encontros}}</p>
+      </details>
+
+      <details>
+        <summary>Luz, névoa e movimento</summary>
+        <label class="mm-field">Luz
+          <select data-state-field="light">{{#each lights}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}</select>
+        </label>
+        <label class="mm-field">Alcance da visão (quadrados; 0 = o da luz, {{radiusAuto}})
+          <input type="number" min="0" max="40" data-state-field="radius" value="{{radius}}">
+        </label>
+        <label class="mm-check"><input type="checkbox" data-state-field="remember" {{#if remember}}checked{{/if}}> A névoa guarda o que já foi visto</label>
+        <label class="mm-field">Passos por movimento dos jogadores (0 = sem limite)
+          <input type="number" min="0" max="200" data-state-field="maxSteps" value="{{maxSteps}}">
+        </label>
+        <label class="mm-field">Imagem do mapa (vazio = {{imageDefault}})
+          <input type="text" data-state-field="image" value="{{image}}" placeholder="{{imageDefault}}">
+        </label>
+        <div class="mm-row-buttons">
+          <button type="button" class="mm-btn" data-action="revealAll"><i class="fa-solid fa-sun"></i> Revelar tudo</button>
+          <button type="button" class="mm-btn" data-action="hideAll"><i class="fa-solid fa-moon"></i> Esconder tudo</button>
+          <button type="button" class="mm-btn" data-action="partyToStart"><i class="fa-solid fa-rotate-left"></i> Grupo na chegada</button>
+          <button type="button" class="mm-btn" data-action="resetFloor"><i class="fa-solid fa-eraser"></i> Desfazer chão</button>
+        </div>
+      </details>
+
+      {{#if hasTable}}
+      <details {{#if encounter}}open{{/if}}>
+        <summary>Encontro aleatório</summary>
+        <button type="button" class="mm-btn" data-action="rollEncounter"><i class="fa-solid fa-dice"></i> Rolar na tabela</button>
+        {{#if encounter}}
+        <p class="mm-encounter"><strong>{{encounter.text}}</strong><br><small>{{#each encounter.log}}{{this}} {{/each}}</small></p>
+        <button type="button" class="mm-btn" data-action="encounterMarker"><i class="fa-solid fa-skull"></i> Marcar no grupo</button>
+        {{/if}}
+      </details>
+      {{/if}}
+
+      <details open>
+        <summary>Marcadores ({{markerCount}})</summary>
+        <button type="button" class="mm-btn" data-action="newMarker"><i class="fa-solid fa-plus"></i> Novo no grupo ({{partyCell}})</button>
+        <button type="button" class="mm-btn" data-action="resetMarkers" title="Recolocar áreas, chegada e portal do livro"><i class="fa-solid fa-book"></i></button>
+        <ul class="mm-marker-list">
+          {{#each markers}}
+          <li data-marker-id="{{id}}" class="{{#if done}}is-done{{/if}}">
+            <span class="mm-dot" style="background: {{color}}">{{glyph}}</span>
+            <button type="button" class="mm-link" data-action="editMarker" title="{{typeLabel}}{{#if triggerLabel}} · {{triggerLabel}}{{/if}}">{{title}}</button>
+            <button type="button" class="mm-mini" data-action="toggleReveal" title="{{#if revealed}}Visível para os jogadores{{else}}Escondido dos jogadores{{/if}}"><i class="fa-solid {{#if revealed}}fa-eye{{else}}fa-eye-slash{{/if}}"></i></button>
+          </li>
+          {{/each}}
+        </ul>
+      </details>
+    </aside>
+    {{/if}}
+  </div>
+</section>

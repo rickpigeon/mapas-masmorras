@@ -1,0 +1,47 @@
+<div class="mm-battle">
+  <p class="mm-hint">Recorta esta área do mapa (sem as marcações do mestre), cria uma cena com grade de 1,5 m, paredes e portas tiradas do mapa, e coloca os tokens.</p>
+  <label class="mm-field">Nome da cena
+    <input type="text" name="name" value="{{name}}" maxlength="120">
+  </label>
+  <div class="mm-grid-4">
+    <label class="mm-field">Col. inicial <input type="number" name="c0" min="0" max="{{cols}}" value="{{rect.c0}}"></label>
+    <label class="mm-field">Lin. inicial <input type="number" name="r0" min="0" max="{{rows}}" value="{{rect.r0}}"></label>
+    <label class="mm-field">Col. final <input type="number" name="c1" min="0" max="{{cols}}" value="{{rect.c1}}"></label>
+    <label class="mm-field">Lin. final <input type="number" name="r1" min="0" max="{{rows}}" value="{{rect.r1}}"></label>
+  </div>
+  <p class="mm-hint">{{size}}</p>
+  <div class="mm-grid-2">
+    <label class="mm-field">Iluminação
+      <select name="light">{{#each lights}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}</select>
+    </label>
+    <label class="mm-check mm-check-pad"><input type="checkbox" name="torches" {{#if torches}}checked{{/if}}> <span>Tochas nos tokens do grupo (6 m)</span></label>
+  </div>
+
+  <fieldset>
+    <legend>Grupo</legend>
+    {{#each party}}
+    <label class="mm-check"><input type="checkbox" data-party="{{id}}" checked> <img src="{{img}}" alt="" width="22" height="22"> <span>{{name}}</span></label>
+    {{else}}
+    <p class="mm-hint">Nenhum jogador tem personagem atribuído (Configurar jogadores).</p>
+    {{/each}}
+  </fieldset>
+
+  <fieldset>
+    <legend>Inimigos{{#if markerTitle}} de “{{markerTitle}}”{{/if}}</legend>
+    {{#each enemies}}
+    <label class="mm-enemy"><img src="{{img}}" alt="" width="22" height="22"> <span>{{name}}</span> <input type="number" name="enemy{{@index}}" min="0" max="20" value="{{count}}"></label>
+    {{else}}
+    <p class="mm-hint">Sem atores no marcador. Arraste atores para o marcador (ou coloque os tokens depois, na cena).</p>
+    {{/each}}
+    <label class="mm-check"><input type="checkbox" name="hidden" checked> <span>Inimigos escondidos (o mestre revela)</span></label>
+  </fieldset>
+
+  <label class="mm-check"><input type="checkbox" name="combat" checked> <span>Criar o combate com todos os tokens</span></label>
+  <label class="mm-check"><input type="checkbox" name="activate" checked> <span>Ativar a cena para todos</span></label>
+  <label class="mm-check"><input type="checkbox" name="closeMaps" checked> <span>Fechar o mapa da masmorra na tela dos jogadores</span></label>
+
+  <footer class="mm-editor-footer">
+    <span class="mm-spacer"></span>
+    <button type="submit" class="mm-btn mm-btn-war"><i class="fa-solid fa-chess-board"></i> Criar o campo de batalha</button>
+  </footer>
+</div>
